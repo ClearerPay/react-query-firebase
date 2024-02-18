@@ -1,7 +1,11 @@
 {
-  "name": "@react-query-firebase/database",
-  "version": "0.2.1",
+  "name": "@clearerpaytqf/database",
   "description": "React Query hooks for Firebase Realtime Database",
+  "version": "0.0.1",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.es.js",
   "types": "dist/index.d.ts",

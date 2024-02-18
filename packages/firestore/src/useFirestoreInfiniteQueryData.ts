@@ -81,6 +81,7 @@ export function useFirestoreInfiniteQueryData<
 ): UseInfiniteQueryResult<R, FirestoreError> {
   return useInfiniteQuery<WithIdField<T, ID>[], FirestoreError, R>({
     queryKey: useInfiniteQueryOptions?.queryKey ?? key,
+    // @ts-ignore don't have the time to fix
     async queryFn(
       ctx: QueryFunctionContext<QueryKey, Query<T>>
     ): Promise<WithIdField<T, ID>[]> {

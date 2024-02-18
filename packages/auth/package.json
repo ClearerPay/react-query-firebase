@@ -1,7 +1,11 @@
 {
-  "name": "@react-query-firebase/auth",
-  "version": "0.3.4",
+  "name": "@clearerpaytqf/auth",
   "description": "React Query hooks for Firebase Authentication",
+  "version": "0.0.1",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.es.js",
   "types": "dist/auth/src/index.d.ts",

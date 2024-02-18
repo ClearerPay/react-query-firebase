@@ -1,8 +1,8 @@
 {
-  "name": "@clearerpay/tqf",
-  "private": false,
+  "name": "@clearerpaytqf/root",
   "description": "React Query hooks for Firebase.",
-  "version": "0.0.2",
+  "version": "0.0.1",
+  "private": false,
   "publishConfig": {
     "access": "public"
   },
