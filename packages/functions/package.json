@@ -4,7 +4,7 @@
   "description": "React Query hooks for Firebase Cloud Functions",
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.es.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/functions/src/index.d.ts",
   "private": false,
   "publishConfig": {
     "access": "public"

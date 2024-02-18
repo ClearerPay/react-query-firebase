@@ -8,7 +8,7 @@
   },
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.es.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/database/src/index.d.ts",
   "files": [
     "dist",
     "LICENSE",
