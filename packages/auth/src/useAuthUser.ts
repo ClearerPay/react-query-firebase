@@ -25,7 +25,10 @@ import { useSubscription } from "../../utils/src/useSubscription";
 export function useAuthUser<R = User>(
   queryKey: QueryKey,
   auth: Auth,
-  options: Omit<UseQueryOptions<User, AuthError, R>, "queryFn"> = {}
+  options: Omit<
+    UseQueryOptions<User, AuthError, R>,
+    "queryFn" | "queryKey"
+  > = {}
 ): UseQueryResult<R, AuthError> {
   const subscribeFn = (cb: NextOrObserver<User | null>) =>
     auth.onAuthStateChanged(cb);

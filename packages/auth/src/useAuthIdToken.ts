@@ -27,7 +27,7 @@ export function useAuthIdToken<R = { token: IdTokenResult }>(
   auth: Auth,
   options: Omit<
     UseQueryOptions<{ token: IdTokenResult }, AuthError, R>,
-    "queryFn"
+    "queryFn" | "queryKey"
   > = {}
 ): UseQueryResult<R, AuthError> {
   const subscribeFn = (

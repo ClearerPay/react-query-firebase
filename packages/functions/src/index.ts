@@ -49,13 +49,16 @@ export function useFunctionsCall<RequestData = any, ResponseData = unknown>(
   options?: HttpsCallableOptions,
   useMutationOptions?: UseMutationOptions<ResponseData, Error, RequestData>
 ): UseMutationResult<ResponseData, Error, RequestData> {
-  return useMutation<ResponseData, Error, RequestData>(async (data) => {
-    const response = await httpsCallable<RequestData, ResponseData>(
-      functions,
-      trigger,
-      options
-    )(data);
+  return useMutation<ResponseData, Error, RequestData>({
+    ...useMutationOptions,
+    mutationFn: async (data) => {
+      const response = await httpsCallable<RequestData, ResponseData>(
+        functions,
+        trigger,
+        options
+      )(data);
 
-    return response.data;
-  }, useMutationOptions);
+      return response.data;
+    },
+  });
 }

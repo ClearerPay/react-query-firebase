@@ -15,11 +15,6 @@
  *
  */
 import {
-  useMutation,
-  UseMutationOptions,
-  UseMutationResult,
-} from "@tanstack/react-query";
-import {
   DatabaseReference,
   remove,
   runTransaction,
@@ -29,6 +24,11 @@ import {
   TransactionResult,
   update,
 } from "@firebase/database";
+import {
+  useMutation,
+  UseMutationOptions,
+  UseMutationResult,
+} from "@tanstack/react-query";
 
 export type UseDatabaseSetMutationOptions = {
   priority?: string | number | null;
@@ -39,13 +39,16 @@ export function useDatabaseSetMutation<T = unknown>(
   options?: UseDatabaseSetMutationOptions,
   useMutationOptions?: UseMutationOptions<void, Error, T>
 ): UseMutationResult<void, Error, T> {
-  return useMutation<void, Error, T>((value) => {
-    if (options?.priority !== undefined) {
-      return setWithPriority(ref, value, options.priority);
-    }
+  return useMutation<void, Error, T>({
+    ...useMutationOptions,
+    mutationFn: (value) => {
+      if (options?.priority !== undefined) {
+        return setWithPriority(ref, value, options.priority);
+      }
 
-    return set(ref, value);
-  }, useMutationOptions);
+      return set(ref, value);
+    },
+  });
 }
 
 type UpdateValues = Record<string, unknown>;
@@ -56,18 +59,24 @@ export function useDatabaseUpdateMutation<
   ref: DatabaseReference,
   useMutationOptions?: UseMutationOptions<void, Error, T>
 ): UseMutationResult<void, Error, T> {
-  return useMutation<void, Error, T>((values) => {
-    return update(ref, values);
-  }, useMutationOptions);
+  return useMutation<void, Error, T>({
+    ...useMutationOptions,
+    mutationFn: (values) => {
+      return update(ref, values);
+    },
+  });
 }
 
 export function useDatabaseRemoveMutation(
   ref: DatabaseReference,
   useMutationOptions?: UseMutationOptions<void, Error, void>
 ): UseMutationResult<void, Error, void> {
-  return useMutation<void, Error, void>(() => {
-    return remove(ref);
-  }, useMutationOptions);
+  return useMutation<void, Error, void>({
+    ...useMutationOptions,
+    mutationFn: () => {
+      return remove(ref);
+    },
+  });
 }
 
 export function useDatabaseTransaction<T = any>(
@@ -76,7 +85,10 @@ export function useDatabaseTransaction<T = any>(
   options?: TransactionOptions,
   useMutationOptions?: UseMutationOptions<TransactionResult, Error, void>
 ): UseMutationResult<TransactionResult, Error, void> {
-  return useMutation<TransactionResult, Error, void>(() => {
-    return runTransaction(ref, transactionUpdate, options);
-  }, useMutationOptions);
+  return useMutation<TransactionResult, Error, void>({
+    ...useMutationOptions,
+    mutationFn: () => {
+      return runTransaction(ref, transactionUpdate, options);
+    },
+  });
 }

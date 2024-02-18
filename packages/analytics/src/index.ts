@@ -1,24 +1,24 @@
 import {
+  QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+  useMutation,
+  useQuery,
+} from "@tanstack/react-query";
+import {
   Analytics,
+  AnalyticsCallOptions,
+  CustomParams,
+  EventParams,
   isSupported,
   logEvent,
-  EventParams,
-  AnalyticsCallOptions,
   setAnalyticsCollectionEnabled,
   setCurrentScreen,
   setUserId,
   setUserProperties,
-  CustomParams,
 } from "firebase/analytics";
-import {
-  QueryKey,
-  useMutation,
-  UseMutationOptions,
-  UseMutationResult,
-  useQuery,
-  UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
 
 export function useAnalyticsIsSupported(
   key: QueryKey,
@@ -37,9 +37,12 @@ export function useAnalyticsSetCollectionEnabled(
   analytics: Analytics,
   useMutationOptions?: UseMutationOptions<void, Error, boolean>
 ): UseMutationResult<void, Error, boolean> {
-  return useMutation(async (enabled) => {
-    return setAnalyticsCollectionEnabled(analytics, enabled);
-  }, useMutationOptions);
+  return useMutation({
+    ...useMutationOptions,
+    mutationFn: async (enabled) => {
+      return setAnalyticsCollectionEnabled(analytics, enabled);
+    },
+  });
 }
 
 export function useAnalyticsSetCurrentScreen(
@@ -54,9 +57,12 @@ export function useAnalyticsSetCurrentScreen(
   Error,
   { screenName: string; options?: AnalyticsCallOptions }
 > {
-  return useMutation(async ({ screenName, options }) => {
-    return setCurrentScreen(analytics, screenName, options);
-  }, useMutationOptions);
+  return useMutation({
+    ...useMutationOptions,
+    mutationFn: async ({ screenName, options }) => {
+      return setCurrentScreen(analytics, screenName, options);
+    },
+  });
 }
 
 export function useAnalyticsSetUserId(
@@ -71,9 +77,12 @@ export function useAnalyticsSetUserId(
   Error,
   { id: string; options?: AnalyticsCallOptions }
 > {
-  return useMutation(async ({ id, options }) => {
-    return setUserId(analytics, id, options);
-  }, useMutationOptions);
+  return useMutation({
+    ...useMutationOptions,
+    mutationFn: async ({ id, options }) => {
+      return setUserId(analytics, id, options);
+    },
+  });
 }
 
 export function useAnalyticsSetUserProperties(
@@ -88,9 +97,12 @@ export function useAnalyticsSetUserProperties(
   Error,
   { properties: CustomParams; options?: AnalyticsCallOptions }
 > {
-  return useMutation(async ({ properties, options }) => {
-    return setUserProperties(analytics, properties, options);
-  }, useMutationOptions);
+  return useMutation({
+    ...useMutationOptions,
+    mutationFn: async ({ properties, options }) => {
+      return setUserProperties(analytics, properties, options);
+    },
+  });
 }
 
 type LogEventArgs<K extends keyof AnalyticsEventMap> = {
@@ -107,14 +119,17 @@ export function useAnalyticsLogEvent(
     void | LogEventArgs<typeof eventName>
   >
 ): UseMutationResult<void, Error, void | LogEventArgs<typeof eventName>> {
-  return useMutation(async (args) => {
-    return logEvent(
-      analytics,
-      eventName as string,
-      args?.params,
-      args?.options
-    );
-  }, useMutationOptions);
+  return useMutation({
+    ...useMutationOptions,
+    mutationFn: async (args) => {
+      return logEvent(
+        analytics,
+        eventName as string,
+        args?.params,
+        args?.options
+      );
+    },
+  });
 }
 
 type CustomLogArgs = {
@@ -129,9 +144,12 @@ export function useAnalyticsCustomLogEvent(
   eventName: string,
   useMutationOptions?: UseMutationOptions<void, Error, void | CustomLogArgs>
 ): UseMutationResult<void, Error, void | CustomLogArgs> {
-  return useMutation(async (args) => {
-    return logEvent(analytics, eventName, args?.params, args?.options);
-  }, useMutationOptions);
+  return useMutation({
+    ...useMutationOptions,
+    mutationFn: async (args) => {
+      return logEvent(analytics, eventName, args?.params, args?.options);
+    },
+  });
 }
 
 export type AnalyticsEventMap = {

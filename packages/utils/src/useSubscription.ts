@@ -14,12 +14,8 @@
  * limitations under the License.
  *
  */
-import { Unsubscribe as AuthUnsubscribe } from "firebase/auth";
-import { Unsubscribe as FirestoreUnsubscribe } from "firebase/firestore";
-import { Unsubscribe as DatabaseUnsubscribe } from "firebase/database";
-import { useEffect } from "react";
 import {
-  hashQueryKey,
+  hashKey,
   QueryFunction,
   QueryKey,
   useQuery,
@@ -27,6 +23,10 @@ import {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
+import { Unsubscribe as AuthUnsubscribe } from "firebase/auth";
+import { Unsubscribe as DatabaseUnsubscribe } from "firebase/database";
+import { Unsubscribe as FirestoreUnsubscribe } from "firebase/firestore";
+import { useEffect } from "react";
 
 type Unsubscribe = AuthUnsubscribe | FirestoreUnsubscribe | DatabaseUnsubscribe;
 
@@ -59,9 +59,9 @@ export function useSubscription<TData, TError, R = TData>(
   queryKey: QueryKey,
   subscriptionKey: QueryKey,
   subscribeFn: (cb: (data: TData | null) => Promise<void>) => Unsubscribe,
-  options?: UseSubscriptionOptions<TData, TError, R>
+  options?: Omit<UseSubscriptionOptions<TData, TError, R>, "queryKey">
 ): UseQueryResult<R, TError> {
-  const hashFn = options?.queryKeyHashFn || hashQueryKey;
+  const hashFn = options?.queryKeyHashFn || hashKey;
   const subscriptionHash = hashFn(subscriptionKey);
   const queryClient = useQueryClient();
 
@@ -99,7 +99,7 @@ export function useSubscription<TData, TError, R = TData>(
   );
 
   result.cancel = () => {
-    queryClient.invalidateQueries(queryKey);
+    queryClient.invalidateQueries({ queryKey });
   };
 
   let unsubscribe: Unsubscribe;

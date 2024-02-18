@@ -18,22 +18,24 @@ import {
   ActionCodeInfo,
   ActionCodeSettings,
   ApplicationVerifier,
-  applyActionCode,
   Auth,
   AuthCredential,
   AuthError,
   AuthProvider,
-  checkActionCode,
-  createUserWithEmailAndPassword,
   ConfirmationResult,
+  PhoneAuthCredential,
+  PopupRedirectResolver,
+  User,
+  UserCredential,
+  applyActionCode,
+  checkActionCode,
   confirmPasswordReset,
+  createUserWithEmailAndPassword,
   deleteUser,
   linkWithCredential,
   linkWithPhoneNumber,
   linkWithPopup,
   linkWithRedirect,
-  PhoneAuthCredential,
-  PopupRedirectResolver,
   reauthenticateWithCredential,
   reauthenticateWithPhoneNumber,
   reauthenticateWithPopup,
@@ -57,33 +59,37 @@ import {
   updatePassword,
   updatePhoneNumber,
   updateProfile,
-  User,
-  UserCredential,
   verifyBeforeUpdateEmail,
   verifyPasswordResetCode,
 } from "@firebase/auth";
 import {
-  useMutation,
   UseMutationOptions,
   UseMutationResult,
+  useMutation,
 } from "@tanstack/react-query";
 
 export function useAuthApplyActionCode(
   auth: Auth,
   useMutationOptions?: UseMutationOptions<void, AuthError, string>
 ): UseMutationResult<void, AuthError, string> {
-  return useMutation<void, AuthError, string>((oobCode) => {
-    return applyActionCode(auth, oobCode);
-  }, useMutationOptions);
+  return useMutation<void, AuthError, string>({
+    ...useMutationOptions,
+    mutationFn: (oobCode) => {
+      return applyActionCode(auth, oobCode);
+    },
+  });
 }
 
 export function useAuthCheckActionCode(
   auth: Auth,
   useMutationOptions?: UseMutationOptions<ActionCodeInfo, AuthError, string>
 ): UseMutationResult<ActionCodeInfo, AuthError, string> {
-  return useMutation<ActionCodeInfo, AuthError, string>((oobCode) => {
-    return checkActionCode(auth, oobCode);
-  }, useMutationOptions);
+  return useMutation<ActionCodeInfo, AuthError, string>({
+    ...useMutationOptions,
+    mutationFn: (oobCode) => {
+      return checkActionCode(auth, oobCode);
+    },
+  });
 }
 
 export function useAuthConfirmPasswordReset(
@@ -99,10 +105,12 @@ export function useAuthConfirmPasswordReset(
   { oobCode: string; newPassword: string }
 > {
   return useMutation<void, AuthError, { oobCode: string; newPassword: string }>(
-    ({ oobCode, newPassword }) => {
-      return confirmPasswordReset(auth, oobCode, newPassword);
-    },
-    useMutationOptions
+    {
+      ...useMutationOptions,
+      mutationFn: ({ oobCode, newPassword }) => {
+        return confirmPasswordReset(auth, oobCode, newPassword);
+      },
+    }
   );
 }
 
@@ -122,17 +130,23 @@ export function useAuthCreateUserWithEmailAndPassword(
     UserCredential,
     AuthError,
     { email: string; password: string }
-  >(({ email, password }) => {
-    return createUserWithEmailAndPassword(auth, email, password);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ email, password }) => {
+      return createUserWithEmailAndPassword(auth, email, password);
+    },
+  });
 }
 
 export function useAuthDeleteUser(
   useMutationOptions?: UseMutationOptions<void, AuthError, User>
 ): UseMutationResult<void, AuthError, User> {
-  return useMutation<void, AuthError, User>((user) => {
-    return deleteUser(user);
-  }, useMutationOptions);
+  return useMutation<void, AuthError, User>({
+    ...useMutationOptions,
+    mutationFn: (user) => {
+      return deleteUser(user);
+    },
+  });
 }
 
 export function useAuthLinkWithCredential(
@@ -150,9 +164,12 @@ export function useAuthLinkWithCredential(
     UserCredential,
     AuthError,
     { user: User; credential: AuthCredential }
-  >(({ user, credential }) => {
-    return linkWithCredential(user, credential);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, credential }) => {
+      return linkWithCredential(user, credential);
+    },
+  });
 }
 
 export function useAuthLinkWithPhoneNumber(
@@ -170,9 +187,12 @@ export function useAuthLinkWithPhoneNumber(
     ConfirmationResult,
     AuthError,
     { user: User; phoneNumber: string; appVerifier: ApplicationVerifier }
-  >(({ user, phoneNumber, appVerifier }) => {
-    return linkWithPhoneNumber(user, phoneNumber, appVerifier);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, phoneNumber, appVerifier }) => {
+      return linkWithPhoneNumber(user, phoneNumber, appVerifier);
+    },
+  });
 }
 
 export function useAuthLinkWithPopup(
@@ -190,9 +210,12 @@ export function useAuthLinkWithPopup(
     UserCredential,
     AuthError,
     { user: User; provider: AuthProvider; resolver?: PopupRedirectResolver }
-  >(({ user, provider, resolver }) => {
-    return linkWithPopup(user, provider, resolver);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, provider, resolver }) => {
+      return linkWithPopup(user, provider, resolver);
+    },
+  });
 }
 
 export function useAuthLinkWithRedirect(
@@ -210,9 +233,12 @@ export function useAuthLinkWithRedirect(
     never,
     AuthError,
     { user: User; provider: AuthProvider; resolver?: PopupRedirectResolver }
-  >(({ user, provider, resolver }) => {
-    return linkWithRedirect(user, provider, resolver);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, provider, resolver }) => {
+      return linkWithRedirect(user, provider, resolver);
+    },
+  });
 }
 
 export function useAuthReauthenticateWithCredential(
@@ -230,9 +256,12 @@ export function useAuthReauthenticateWithCredential(
     UserCredential,
     AuthError,
     { user: User; credential: AuthCredential }
-  >(({ user, credential }) => {
-    return reauthenticateWithCredential(user, credential);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, credential }) => {
+      return reauthenticateWithCredential(user, credential);
+    },
+  });
 }
 
 export function useAuthReauthenticateWithPhoneNumber(
@@ -250,9 +279,12 @@ export function useAuthReauthenticateWithPhoneNumber(
     ConfirmationResult,
     AuthError,
     { user: User; phoneNumber: string; appVerifier: ApplicationVerifier }
-  >(({ user, phoneNumber, appVerifier }) => {
-    return reauthenticateWithPhoneNumber(user, phoneNumber, appVerifier);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, phoneNumber, appVerifier }) => {
+      return reauthenticateWithPhoneNumber(user, phoneNumber, appVerifier);
+    },
+  });
 }
 
 export function useAuthReauthenticateWithPopup(
@@ -270,9 +302,12 @@ export function useAuthReauthenticateWithPopup(
     UserCredential,
     AuthError,
     { user: User; provider: AuthProvider; resolver?: PopupRedirectResolver }
-  >(({ user, provider, resolver }) => {
-    return reauthenticateWithPopup(user, provider, resolver);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, provider, resolver }) => {
+      return reauthenticateWithPopup(user, provider, resolver);
+    },
+  });
 }
 
 export function useAuthReauthenticateWithRedirect(
@@ -290,17 +325,23 @@ export function useAuthReauthenticateWithRedirect(
     never,
     AuthError,
     { user: User; provider: AuthProvider; resolver?: PopupRedirectResolver }
-  >(({ user, provider, resolver }) => {
-    return reauthenticateWithRedirect(user, provider, resolver);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, provider, resolver }) => {
+      return reauthenticateWithRedirect(user, provider, resolver);
+    },
+  });
 }
 
 export function useAuthReload(
   useMutationOptions?: UseMutationOptions<void, AuthError, User>
 ): UseMutationResult<void, AuthError, User> {
-  return useMutation<void, AuthError, User>((user) => {
-    return reload(user);
-  }, useMutationOptions);
+  return useMutation<void, AuthError, User>({
+    ...useMutationOptions,
+    mutationFn: (user) => {
+      return reload(user);
+    },
+  });
 }
 
 export function useAuthSendEmailVerification(
@@ -318,9 +359,12 @@ export function useAuthSendEmailVerification(
     void,
     AuthError,
     { user: User; actionCodeSettings?: ActionCodeSettings | null }
-  >(({ user, actionCodeSettings }) => {
-    return sendEmailVerification(user, actionCodeSettings);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, actionCodeSettings }) => {
+      return sendEmailVerification(user, actionCodeSettings);
+    },
+  });
 }
 
 export function useAuthSendPasswordResetEmail(
@@ -339,9 +383,12 @@ export function useAuthSendPasswordResetEmail(
     void,
     AuthError,
     { email: string; actionCodeSettings?: ActionCodeSettings }
-  >(({ email, actionCodeSettings }) => {
-    return sendPasswordResetEmail(auth, email, actionCodeSettings);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ email, actionCodeSettings }) => {
+      return sendPasswordResetEmail(auth, email, actionCodeSettings);
+    },
+  });
 }
 
 export function useAuthSendSignInLinkToEmail(
@@ -360,9 +407,12 @@ export function useAuthSendSignInLinkToEmail(
     void,
     AuthError,
     { email: string; actionCodeSettings: ActionCodeSettings }
-  >(({ email, actionCodeSettings }) => {
-    return sendSignInLinkToEmail(auth, email, actionCodeSettings);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ email, actionCodeSettings }) => {
+      return sendSignInLinkToEmail(auth, email, actionCodeSettings);
+    },
+  });
 }
 
 export function useAuthSignInAnonymously(
@@ -381,9 +431,12 @@ export function useAuthSignInAnonymously(
     UserCredential,
     AuthError,
     { email: string; password: string }
-  >(() => {
-    return signInAnonymously(auth);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: () => {
+      return signInAnonymously(auth);
+    },
+  });
 }
 
 export function useAuthSignInWithCredential(
@@ -394,21 +447,24 @@ export function useAuthSignInWithCredential(
     AuthCredential
   >
 ): UseMutationResult<UserCredential, AuthError, AuthCredential> {
-  return useMutation<UserCredential, AuthError, AuthCredential>(
-    (credential) => {
+  return useMutation<UserCredential, AuthError, AuthCredential>({
+    ...useMutationOptions,
+    mutationFn: (credential) => {
       return signInWithCredential(auth, credential);
     },
-    useMutationOptions
-  );
+  });
 }
 
 export function useAuthSignInWithCustomToken(
   auth: Auth,
   useMutationOptions?: UseMutationOptions<UserCredential, AuthError, string>
 ): UseMutationResult<UserCredential, AuthError, string> {
-  return useMutation<UserCredential, AuthError, string>((customToken) => {
-    return signInWithCustomToken(auth, customToken);
-  }, useMutationOptions);
+  return useMutation<UserCredential, AuthError, string>({
+    ...useMutationOptions,
+    mutationFn: (customToken) => {
+      return signInWithCustomToken(auth, customToken);
+    },
+  });
 }
 
 export function useAuthSignInWithEmailAndPassword(
@@ -427,9 +483,12 @@ export function useAuthSignInWithEmailAndPassword(
     UserCredential,
     AuthError,
     { email: string; password: string }
-  >(({ email, password }) => {
-    return signInWithEmailAndPassword(auth, email, password);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ email, password }) => {
+      return signInWithEmailAndPassword(auth, email, password);
+    },
+  });
 }
 
 export function useAuthSignInWithEmailLink(
@@ -448,9 +507,12 @@ export function useAuthSignInWithEmailLink(
     UserCredential,
     AuthError,
     { email: string; emailLink?: string }
-  >(({ email, emailLink }) => {
-    return signInWithEmailLink(auth, email, emailLink);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ email, emailLink }) => {
+      return signInWithEmailLink(auth, email, emailLink);
+    },
+  });
 }
 
 export function useAuthSignInWithPhoneNumber(
@@ -469,9 +531,12 @@ export function useAuthSignInWithPhoneNumber(
     ConfirmationResult,
     AuthError,
     { phoneNumber: string; appVerifier: ApplicationVerifier }
-  >(({ phoneNumber, appVerifier }) => {
-    return signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ phoneNumber, appVerifier }) => {
+      return signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+    },
+  });
 }
 
 export function useAuthSignInWithPopup(
@@ -490,9 +555,12 @@ export function useAuthSignInWithPopup(
     UserCredential,
     AuthError,
     { provider: AuthProvider; resolver?: PopupRedirectResolver }
-  >(({ provider, resolver }) => {
-    return signInWithPopup(auth, provider, resolver);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ provider, resolver }) => {
+      return signInWithPopup(auth, provider, resolver);
+    },
+  });
 }
 
 export function useAuthSignInWithRedirect(
@@ -511,18 +579,24 @@ export function useAuthSignInWithRedirect(
     never,
     AuthError,
     { provider: AuthProvider; resolver?: PopupRedirectResolver }
-  >(({ provider, resolver }) => {
-    return signInWithRedirect(auth, provider, resolver);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ provider, resolver }) => {
+      return signInWithRedirect(auth, provider, resolver);
+    },
+  });
 }
 
 export function useAuthSignOut(
   auth: Auth,
   useMutationOptions?: UseMutationOptions<void, AuthError, void>
 ): UseMutationResult<void, AuthError, void> {
-  return useMutation<void, AuthError, void>(() => {
-    return signOut(auth);
-  }, useMutationOptions);
+  return useMutation<void, AuthError, void>({
+    ...useMutationOptions,
+    mutationFn: () => {
+      return signOut(auth);
+    },
+  });
 }
 
 export function useAuthUnlink(
@@ -532,21 +606,24 @@ export function useAuthUnlink(
     { user: User; providerId: string }
   >
 ): UseMutationResult<User, AuthError, { user: User; providerId: string }> {
-  return useMutation<User, AuthError, { user: User; providerId: string }>(
-    ({ user, providerId }) => {
+  return useMutation<User, AuthError, { user: User; providerId: string }>({
+    ...useMutationOptions,
+    mutationFn: ({ user, providerId }) => {
       return unlink(user, providerId);
     },
-    useMutationOptions
-  );
+  });
 }
 
 export function useAuthUpdateCurrentUser(
   auth: Auth,
   useMutationOptions?: UseMutationOptions<void, AuthError, User | null>
 ): UseMutationResult<void, AuthError, User | null> {
-  return useMutation<void, AuthError, User | null>((user) => {
-    return updateCurrentUser(auth, user);
-  }, useMutationOptions);
+  return useMutation<void, AuthError, User | null>({
+    ...useMutationOptions,
+    mutationFn: (user) => {
+      return updateCurrentUser(auth, user);
+    },
+  });
 }
 
 export function useAuthUpdateEmail(
@@ -556,12 +633,12 @@ export function useAuthUpdateEmail(
     { user: User; newEmail: string }
   >
 ): UseMutationResult<void, AuthError, { user: User; newEmail: string }> {
-  return useMutation<void, AuthError, { user: User; newEmail: string }>(
-    ({ user, newEmail }) => {
+  return useMutation<void, AuthError, { user: User; newEmail: string }>({
+    ...useMutationOptions,
+    mutationFn: ({ user, newEmail }) => {
       return updateEmail(user, newEmail);
     },
-    useMutationOptions
-  );
+  });
 }
 
 export function useAuthUpdatePassword(
@@ -571,12 +648,12 @@ export function useAuthUpdatePassword(
     { user: User; newPassword: string }
   >
 ): UseMutationResult<void, AuthError, { user: User; newPassword: string }> {
-  return useMutation<void, AuthError, { user: User; newPassword: string }>(
-    ({ user, newPassword }) => {
+  return useMutation<void, AuthError, { user: User; newPassword: string }>({
+    ...useMutationOptions,
+    mutationFn: ({ user, newPassword }) => {
       return updatePassword(user, newPassword);
     },
-    useMutationOptions
-  );
+  });
 }
 
 export function useAuthUpdatePhoneNumber(
@@ -594,9 +671,12 @@ export function useAuthUpdatePhoneNumber(
     void,
     AuthError,
     { user: User; credential: PhoneAuthCredential }
-  >(({ user, credential }) => {
-    return updatePhoneNumber(user, credential);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, credential }) => {
+      return updatePhoneNumber(user, credential);
+    },
+  });
 }
 
 export function useAuthUpdateProfile(
@@ -614,9 +694,12 @@ export function useAuthUpdateProfile(
     void,
     AuthError,
     { user: User; displayName?: string | null; photoURL?: string | null }
-  >(({ user, ...update }) => {
-    return updateProfile(user, update);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, ...update }) => {
+      return updateProfile(user, update);
+    },
+  });
 }
 
 export function useAuthVerifyBeforeUpdateEmail(
@@ -634,16 +717,22 @@ export function useAuthVerifyBeforeUpdateEmail(
     void,
     AuthError,
     { user: User; newEmail: string; actionCodeSettings?: ActionCodeSettings }
-  >(({ user, newEmail, actionCodeSettings }) => {
-    return verifyBeforeUpdateEmail(user, newEmail, actionCodeSettings);
-  }, useMutationOptions);
+  >({
+    ...useMutationOptions,
+    mutationFn: ({ user, newEmail, actionCodeSettings }) => {
+      return verifyBeforeUpdateEmail(user, newEmail, actionCodeSettings);
+    },
+  });
 }
 
 export function useAuthVerifyPasswordResetCode(
   auth: Auth,
   useMutationOptions?: UseMutationOptions<string, AuthError, string>
 ): UseMutationResult<string, AuthError, string> {
-  return useMutation<string, AuthError, string>((code) => {
-    return verifyPasswordResetCode(auth, code);
-  }, useMutationOptions);
+  return useMutation<string, AuthError, string>({
+    ...useMutationOptions,
+    mutationFn: (code) => {
+      return verifyPasswordResetCode(auth, code);
+    },
+  });
 }
