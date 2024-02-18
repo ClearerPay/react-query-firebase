@@ -1,7 +1,11 @@
 {
-  "name": "@react-query-firebase/root",
-  "private": true,
+  "name": "@clearerpay/tqf",
+  "private": false,
   "description": "React Query hooks for Firebase.",
+  "version": "0.0.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "react",
     "react-query",
