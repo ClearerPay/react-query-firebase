@@ -1,6 +1,6 @@
 {
   "name": "@clearerpaytqf/functions",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React Query hooks for Firebase Cloud Functions",
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.es.js",

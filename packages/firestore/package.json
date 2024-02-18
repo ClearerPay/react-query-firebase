@@ -1,6 +1,6 @@
 {
   "name": "@clearerpaytqf/firestore",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React Query hooks for Firebase Cloud Firestore",
   "private": false,
   "publishConfig": {

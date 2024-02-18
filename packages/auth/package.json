@@ -1,7 +1,7 @@
 {
   "name": "@clearerpaytqf/auth",
   "description": "React Query hooks for Firebase Authentication",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "publishConfig": {
     "access": "public"
