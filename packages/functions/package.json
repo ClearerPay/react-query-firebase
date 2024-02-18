@@ -5,6 +5,10 @@
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.es.js",
   "types": "dist/index.d.ts",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "LICENSE",
@@ -36,5 +40,6 @@
     "@tanstack/react-query": "^5.18.1",
     "firebase": "^9.0.1",
     "react": "^16.8.0 || ^17.0.0 || ^18.2.0"
-  }
+  },
+  "gitHead": "31f735e61b77ddde14222c05f6a2cdf34a95e41c"
 }
